@@ -1,0 +1,18 @@
+{
+    "name": "imefisto/eventsauce-pdo-message-repository",
+    "autoload": {
+        "psr-4": {
+            "Imefisto\\EventSaucePDOMessageRepository\\": "src/",
+            "Imefisto\\EventSaucePDOMessageRepository\\Testing\\": "tests/"
+        }
+    },
+    "require": {
+        "eventsauce/eventsauce": "^3.4",
+        "ramsey/uuid": "^4.7"
+    },
+    "require-dev": {
+        "eventsauce/message-repository-test-tooling": "^1.0",
+        "eventsauce/test-utilities": "^3.4",
+        "eventsauce/message-outbox-test-tooling": "^1.0"
+    }
+}
