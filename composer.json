@@ -8,7 +8,9 @@
     },
     "require": {
         "eventsauce/eventsauce": "^3.4",
-        "ramsey/uuid": "^4.7"
+        "ramsey/uuid": "^4.7",
+        "eventsauce/message-repository-table-schema": "^1.0",
+        "eventsauce/id-encoding": "^1.0"
     },
     "require-dev": {
         "eventsauce/message-repository-test-tooling": "^1.0",

@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    build: .
+    environment:
+      - MYSQL_ROOT_PASSWORD=nacho4032
+      - MYSQL_DATABASE=basket
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+    ports:
+      - 33060:3306
