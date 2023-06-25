@@ -6,6 +6,7 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Serialization\MySQL8DateFormatting;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
+use Imefisto\EventSaucePDOMessageRepository\DefaultConnectionManager;
 use Imefisto\EventSaucePDOMessageRepository\DummyAggregateRootId;
 use Imefisto\EventSaucePDOMessageRepository\PDOMessageRepository;
 use Ramsey\Uuid\Uuid;
@@ -35,10 +36,14 @@ class PDOMessageRepositoryTest extends MessageRepositoryTestCase
 
     protected function messageRepository(): MessageRepository
     {
-        return new PDOMessageRepository(
+        $connection = new DefaultConnectionManager(
             $this->dsn,
             $this->user,
-            $this->password,
+            $this->password
+        );
+
+        return new PDOMessageRepository(
+            $connection,
             $this->tableName,
             new MySQL8DateFormatting(new ConstructingMessageSerializer())
         );

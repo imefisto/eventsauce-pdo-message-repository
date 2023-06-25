@@ -17,16 +17,13 @@ use Ramsey\Uuid\Uuid;
 class PDOMessageRepository implements MessageRepository
 {
     public function __construct(
-        private string $dsn,
-        private string $user,
-        private string $password,
+        private ConnectionManager $connection,
         private string $tableName,
         private MessageSerializer $serializer,
         private int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
         ?IdEncoder $aggregateRootIdEncoder = null,
-        ?IdEncoder $eventIdEncoder = null,
-        ?array $pdoOptions = []
+        ?IdEncoder $eventIdEncoder = null
     ) {
         $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
         $this->aggregateRootIdEncoder = $aggregateRootIdEncoder
@@ -92,8 +89,10 @@ class PDOMessageRepository implements MessageRepository
                 . 'VALUES '
                 . implode(',', $placeholdersForValues);
 
-            $stmt = $this->connection()->prepare($sql);
+            $conn = $this->connection->get();
+            $stmt = $conn->prepare($sql);
             $stmt->execute($values);
+            $this->connection->put($conn);
         } catch (\PDOException $exception) {
             throw UnableToPersistMessages::dueTo('', $exception);
         }
@@ -106,12 +105,14 @@ class PDOMessageRepository implements MessageRepository
             . ' ORDER BY ' . $this->tableSchema->versionColumn() . ' ASC';
 
         try {
-            $stmt = $this->connection()->prepare($sql);
+            $conn = $this->connection->get();
+            $stmt = $conn->prepare($sql);
             $stmt->execute(
                 [
                     $this->aggregateRootIdEncoder->encodeId($id)
                 ]
             );
+            $this->connection->put($conn);
 
             return $this->yieldMessagesForResult($stmt);
         } catch (\PDOException $exception) {
@@ -129,13 +130,15 @@ class PDOMessageRepository implements MessageRepository
             . ' ORDER BY ' . $this->tableSchema->versionColumn() . ' ASC';
 
         try {
-            $stmt = $this->connection()->prepare($sql);
+            $conn = $this->connection->get();
+            $stmt = $conn->prepare($sql);
             $stmt->execute(
                 [
                     $this->aggregateRootIdEncoder->encodeId($id),
                     $aggregateRootVersion
                 ]
             );
+            $this->connection->put($conn);
 
             return $this->yieldMessagesForResult($stmt);
         } catch (\PDOException $exception) {
@@ -179,10 +182,12 @@ class PDOMessageRepository implements MessageRepository
             . ' LIMIT :limit';
 
         try {
-            $stmt = $this->connection()->prepare($sql);
+            $conn = $this->connection->get();
+            $stmt = $conn->prepare($sql);
             $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
             $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
             $stmt->execute();
+            $this->connection->put($conn);
 
             while ($row = $stmt->fetch(\PDO::FETCH_OBJ)) {
                 $offset ++;
@@ -196,33 +201,5 @@ class PDOMessageRepository implements MessageRepository
         } catch (\PDOException $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
-    }
-
-    private function connection()
-    {
-        if (empty($this->pdo)) {
-            $this->_reconnect();
-        }
-
-        return $this->pdo;
-    }
-
-    private function _reconnect()
-    {
-        $defaultOptions = [
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-        ];
-
-        $this->pdo = new \PDO(
-            $this->dsn,
-            $this->user,
-            $this->password,
-            array_merge(
-                $defaultOptions,
-                $this->pdoOptions ?? []
-            )
-        );
-
-        return $this->pdo;
     }
 }
