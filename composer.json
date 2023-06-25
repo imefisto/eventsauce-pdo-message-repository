@@ -1,5 +1,13 @@
 {
     "name": "imefisto/eventsauce-pdo-message-repository",
+    "description": "Implementation of EventSauce Message Repository using PDO",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Ignacio El Kadre",
+        "email": "ignacio@inek.ar"
+      }
+    ],
     "autoload": {
         "psr-4": {
             "Imefisto\\EventSaucePDOMessageRepository\\": "src/",
