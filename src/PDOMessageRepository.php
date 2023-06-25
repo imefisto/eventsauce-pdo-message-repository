@@ -11,6 +11,7 @@ use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use EventSauce\IdEncoding\BinaryUuidIdEncoder;
+use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use Ramsey\Uuid\Uuid;
 
