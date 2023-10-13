@@ -30,7 +30,7 @@ class PDOMessageRepositoryTest extends MessageRepositoryTestCase
             $this->password
         );
 
-        $stmt = $pdo->prepare('TRUNCATE TABLE domain_messages_uuid');
+        $stmt = $pdo->prepare('TRUNCATE TABLE ' . $this->tableName);
         $stmt->execute();
     }
 

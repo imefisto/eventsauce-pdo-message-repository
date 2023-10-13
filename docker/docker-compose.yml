@@ -1,6 +1,7 @@
 version: '3'
 services:
   db:
+    image: eventsauce-pdo-message-repository-test-db
     build: .
     environment:
       - MYSQL_ROOT_PASSWORD=nacho4032

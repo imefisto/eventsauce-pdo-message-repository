@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `event_store` (
+CREATE TABLE IF NOT EXISTS `domain_messages_uuid` (
     `id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `event_id` BINARY(16) NOT NULL,
     `aggregate_root_id` BINARY(16) NOT NULL,

@@ -13,10 +13,15 @@ use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use EventSauce\IdEncoding\BinaryUuidIdEncoder;
 use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\MessageRepository\TableSchema\TableSchema;
 use Ramsey\Uuid\Uuid;
 
 class PDOMessageRepository implements MessageRepository
 {
+    private TableSchema $tableSchema;
+    private IdEncoder $aggregateRootIdEncoder;
+    private IdEncoder $eventIdEncoder;
+
     public function __construct(
         private ConnectionManager $connection,
         private string $tableName,
