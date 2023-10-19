@@ -152,7 +152,7 @@ class PDOMessageRepository implements MessageRepository
         }
     }
 
-    private function yieldMessagesForResult(\PDOStatement $stmt): \Generator
+    private function yieldMessagesForResult($stmt): \Generator
     {
         while ($row = $stmt->fetch(\PDO::FETCH_OBJ)) {
             $payload = json_decode($row->payload, true);
